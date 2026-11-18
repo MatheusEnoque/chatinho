@@ -1,0 +1,89 @@
+{
+  "data_inicio": "2026-11-18T11:33:00",
+  "respostas_validas_por_tarefa_e_condicao": 5,
+  "condicoes": {
+    "chatinho": "ChaTinho (com prompt de direcionamento)",
+    "padrao": "Gemini padrão (sem prompt de direcionamento)"
+  },
+  "diferenca_entre_condicoes": "Somente o texto enviado: na condição 'chatinho' o SYSTEM_PROMPT é concatenado ao prompt do usuário na mesma mensagem (como no main.py); na condição 'padrao' é enviado apenas o prompt do usuário. O campo system_instruction não é utilizado. Modelo e parâmetros são idênticos.",
+  "system_instruction_utilizado": false,
+  "conversa": "nova a cada execução, sem histórico",
+  "ordem_das_condicoes": "sorteada a cada repetição/tarefa",
+  "semente_sorteio_ordem": 657743,
+  "pausa_entre_chamadas_s": 10.0,
+  "politica_de_falhas": "erros temporários (429/500/503) repetidos até a resposta válida, espera de 30 s × nº da tentativa (máx. 300 s), até 40 tentativas; o tempo mede só a tentativa válida",
+  "modelo_solicitado": "gemini-3.6-flash",
+  "metadados_modelo_api": {
+    "name": "models/gemini-3.6-flash",
+    "version": "3.6-flash-07-2026",
+    "display_name": "Gemini 3.6 Flash",
+    "input_token_limit": 1048576,
+    "output_token_limit": 65536,
+    "temperature": 1.0,
+    "max_temperature": 2.0,
+    "top_p": 0.95,
+    "top_k": 64,
+    "thinking": true
+  },
+  "parametros_geracao": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+    "candidate_count": 1,
+    "thinking_level": "low",
+    "include_thoughts": false,
+    "seed": null,
+    "presence_penalty": null,
+    "frequency_penalty": null,
+    "stop_sequences": null,
+    "safety_settings": null,
+    "tools": null
+  },
+  "config_enviada_api": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 64.0,
+    "candidate_count": 1,
+    "max_output_tokens": 8192,
+    "thinking_config": {
+      "include_thoughts": false,
+      "thinking_level": "LOW"
+    }
+  },
+  "safety_settings": "não enviado: vale o padrão do serviço",
+  "system_prompt": "Você é o ChaTinho, uma inteligência de alto nível focada em suporte acadêmico e criativo para estudantes universitários.\nSeu tom deve ser profissional, empático, inspirador e extremamente organizado.\n\nDIRETRIZES:\n1. Se o usuário pedir ajuda acadêmica (TCC, resumos, artigos), use uma estrutura lógica e cite a importância da metodologia.\n2. Se o usuário pedir algo criativo, seja expansivo e sugira abordagens inovadoras.\n3. Antes da resposta final, apresente uma seção breve chamada 'Etapas verificadas', listando os critérios utilizados e as etapas conferidas para elaborar a resposta. Não a apresente como pensamento interno.\n4. Se houver arquivos anexados, analise-os com profundidade e referencie partes específicas.\n\nIMPORTANTE: Comece sua resposta com [ETAPAS] e termine essa seção com [/ETAPAS] antes de dar a resposta final ao usuário.",
+  "tarefas": {
+    "tarefa1": {
+      "nome": "Tarefa 1 - Estruturação de seção de TCC",
+      "prompt": "Preciso de um guia estruturado para redigir a justificativa e os objetivos (geral e específicos) do meu TCC em Ciência da Computação, cujo tema é um assistente virtual acadêmico.",
+      "anexo": null
+    },
+    "tarefa2": {
+      "nome": "Tarefa 2 - Análise multimodal de PDF",
+      "prompt": "Analise o PDF anexado e faça uma síntese das seções obrigatórias do TCC, do limite de palavras do resumo e das regras para as referências bibliográficas.",
+      "anexo": "Referencia de documentos TCC/Modelo de TCC-Monografia.pdf"
+    },
+    "tarefa3": {
+      "nome": "Tarefa 3 - Self-Attention, CoT e 4 referências ABNT",
+      "prompt": "Explique o mecanismo de auto-atenção (Self-Attention) e a técnica Chain-of-Thought, e indique quatro referências bibliográficas sobre esses temas no formato ABNT.",
+      "anexo": null
+    }
+  },
+  "anexos": {
+    "tarefa2": {
+      "arquivo": "Referencia de documentos TCC/Modelo de TCC-Monografia.pdf",
+      "bytes": 148798,
+      "sha256": "003e072ba09252e31a3156028f7b751a8af29e46ea7b6c67efe6e10b47e4ee10"
+    }
+  },
+  "ambiente": {
+    "python": "3.14.3",
+    "sistema": "Windows-11-10.0.26300-SP0",
+    "google-genai": "3.2.0",
+    "streamlit": "1.67.0",
+    "python-dotenv": "1.2.4"
+  },
+  "data_fim": "2026-11-18T15:32:01",
+  "interrompida": "tarefa2_padrao_rep1: sem resposta válida após 40 tentativas"
+}

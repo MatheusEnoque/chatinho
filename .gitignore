@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Variáveis de ambiente e segredos
+.env
+.streamlit/secrets.toml
+
+# Pastas de dados locais e downloads gerados
+Conversas/
+Downloads/
+historico_conversas.json
+
+# Documentos do TCC e materiais de terceiros (não publicar)
+Meu TCC/
+TCC/
+Referencia de documentos TCC/
+Apostila_ChatBot.pdf
+*.zip
+
+# Atalhos locais de ferramentas
+.agents/

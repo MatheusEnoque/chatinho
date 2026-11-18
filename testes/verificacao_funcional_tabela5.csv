@@ -1,0 +1,17 @@
+﻿ct;caso;procedimento;resultado_esperado;data_hora;responsavel;resultado_obtido;situacao
+CT01;Nova conversa;Criar uma conversa e enviar uma mensagem.;Conversa aparece na barra lateral, com título gerado.;;;;
+CT02;Persistência;Reiniciar o app. Abrir também uma conversa antiga salva com [PENSAMENTO].;"Conversas reconstruídas a partir da pasta Conversas; a conversa antiga com [PENSAMENTO] abre normalmente.";;;;
+CT03;Exclusão;Excluir uma conversa.;Conversa sai da lista e a pasta é apagada.;;;;
+CT04;Resposta;Enviar uma pergunta acadêmica simples.;Resposta exibida, sem erro.;;;;
+CT05;PDF;Anexar o PDF de 20 páginas (UFAC) e fazer uma pergunta.;Resposta cita trechos do documento e o anexo é descartado após o envio.;;;;
+CT06;Imagem anexada;Anexar um PNG e pedir a descrição.;Descrição coerente com a imagem.;;;;
+CT07;Arquivo .docx;Anexar um arquivo .docx e enviar uma mensagem.;Erro compreensível, sem travar o app.;;;;
+CT08;Etapas verificadas;Abrir o expansor de uma resposta.;"""Etapas verificadas"" separada da resposta. Sem as marcas [ETAPAS], todo o texto aparece como resposta.";;;;
+CT09;Comando /imagem;/imagem arvore do conhecimento feita de livros luminosos em uma biblioteca;Imagem gerada, exibida e salva em Downloads e na pasta da conversa.;18/11/2026 11:32:32;execução automatizada do app (Streamlit AppTest);"6,32 s; JPEG de 768 × 768 px e 78.285 bytes, embora o app peça 1024 × 1024; gravação em duas pastas de conversa";aprovado com ressalvas
+CT10;Biblioteca;Abrir a galeria e baixar uma imagem.;Download concluído.;;;;
+CT11;Temas;Alternar entre Gradiente, Escuro e Claro.;A conversa não se perde.;;;;
+CT12;Modelo;Trocar entre gemini-3.5-flash e gemini-3.8-flash e enviar uma mensagem em cada.;Resposta do modelo escolhido.;;;;
+CT13;Chave inválida;Informar uma API Key inválida nas Configurações e enviar uma mensagem.;Mensagem específica de chave inválida.;;;;
+CT14;Cota (erro 429);Provocar o limite de requisições.;Mensagem específica de limite de requisições.;;;;
+CT15;Contexto;"Enviar ""Meu tema é X"" e depois ""Qual é o meu tema?"".";"Pela inspeção do código, o esperado é reprovado (sem histórico multi-turno); confirmar.";;;;
+CT16;Aviso de privacidade;Abrir o app antes do primeiro envio e abrir a área de anexos (Docs e Fotos).;Aviso aparece antes do primeiro envio e também na área de anexos.;;;;

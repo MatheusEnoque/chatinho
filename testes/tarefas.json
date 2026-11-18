@@ -1,0 +1,21 @@
+{
+  "tarefa1": {
+    "nome": "Tarefa 1 - Estruturação de seção de TCC",
+    "prompt": "Preciso de um guia estruturado para redigir a justificativa e os objetivos (geral e específicos) do meu TCC em Ciência da Computação, cujo tema é um assistente virtual acadêmico.",
+    "anexo": null
+  },
+  "tarefa2": {
+    "nome": "Tarefa 2 - Análise multimodal de PDF",
+    "prompt": "Analise o PDF anexado e faça uma síntese das seções obrigatórias do TCC, do limite de palavras do resumo e das regras para as referências bibliográficas.",
+    "anexo": "Referencia de documentos TCC/Modelo de TCC-Monografia.pdf"
+  },
+  "tarefa3": {
+    "nome": "Tarefa 3 - Self-Attention, CoT e 4 referências ABNT",
+    "prompt": "Explique o mecanismo de auto-atenção (Self-Attention) e a técnica Chain-of-Thought, e indique quatro referências bibliográficas sobre esses temas no formato ABNT.",
+    "anexo": null
+  },
+  "imagem": {
+    "nome": "Tarefa 3b - Geração de imagem (/imagem)",
+    "prompt": "arvore do conhecimento feita de livros luminosos em uma biblioteca"
+  }
+}

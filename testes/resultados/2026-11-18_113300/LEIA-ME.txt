@@ -1,0 +1,6 @@
+avaliacao_cega/  -> respostas sem a condição, em ordem aleatória, e uma ficha para cada autor.
+                    Avaliar ANTES de abrir com_condicao/.
+com_condicao/    -> medidas (execucoes.csv), tentativas.csv, chave_codigos.csv,
+                    apendice_c_respostas.md e respostas/ identificadas.
+resumo.md        -> tabela com média ± desvio-padrão (contém a condição, mas não as respostas).
+configuracao.json-> parâmetros, versões, prompts e anexos.
