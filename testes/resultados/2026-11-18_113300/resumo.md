@@ -1,20 +1,22 @@
-# Resumo dos testes – 18/11/2026 11:33 a 18/11/2026 15:32
+# Resumo dos testes – 18/11/2026 11:33 a 25/11/2026 08:40
 
 Modelo solicitado: `gemini-3.6-flash` · versões retornadas: gemini-3.6-flash
-Respostas válidas: 3 de 30 previstas · **bateria interrompida:** tarefa2_padrao_rep1: sem resposta válida após 40 tentativas
-Novas tentativas por falha da API: 4 (429: 1, 503: 3)
+Sessões de execução: 18/11/2026 11:33–15:32; 24/11/2026 21:47–21:53 (pausada: cota diária); 25/11/2026 08:35–08:40
+Datas das respostas válidas: 18/11/2026, 24/11/2026, 25/11/2026
+Respostas válidas: 30 de 30 previstas
+Novas tentativas por falha da API: 45 (429: 29, 503: 16)
 Respostas cortadas por MAX_TOKENS: 0
 
 Valores: média ± desvio-padrão (mínimo–máximo).
 
 | Tarefa | Condição | n | Tempo de resposta (s) | Bloco [ETAPAS] (caracteres) | Resposta final (caracteres) | Tokens de saída | Tokens de raciocínio nativo | [ETAPAS] presente | MAX_TOKENS | Novas tentativas |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Tarefa 1 - Estruturação de seção de TCC | ChaTinho (com prompt de direcionamento) | 1 | 13,88 ± 0,00 (13,88–13,88) | 453 ± 0 (453–453) | 4803 ± 0 (4803–4803) | 1344 ± 0 (1344–1344) | 572 ± 0 (572–572) | 100% | 0 | 0 |
-| Tarefa 1 - Estruturação de seção de TCC | Gemini padrão (sem prompt de direcionamento) | 1 | 62,97 ± 0,00 (62,97–62,97) | 0 ± 0 (0–0) | 5107 ± 0 (5107–5107) | 1314 ± 0 (1314–1314) | 966 ± 0 (966–966) | 0% | 0 | 4 |
-| Tarefa 2 - Análise multimodal de PDF | ChaTinho (com prompt de direcionamento) | 1 | 44,94 ± 0,00 (44,94–44,94) | 505 ± 0 (505–505) | 4489 ± 0 (4489–4489) | 1426 ± 0 (1426–1426) | - | 100% | 0 | 0 |
-| Tarefa 2 - Análise multimodal de PDF | Gemini padrão (sem prompt de direcionamento) | 0 | - | - | - | - | - | - | 0 | 0 |
-| Tarefa 3 - Self-Attention, CoT e 4 referências ABNT | ChaTinho (com prompt de direcionamento) | 0 | - | - | - | - | - | - | 0 | 0 |
-| Tarefa 3 - Self-Attention, CoT e 4 referências ABNT | Gemini padrão (sem prompt de direcionamento) | 0 | - | - | - | - | - | - | 0 | 0 |
+| Tarefa 1 - Estruturação de seção de TCC | ChaTinho (com prompt de direcionamento) | 5 | 13,60 ± 1,99 (11,44–15,94) | 634 ± 156 (453–783) | 4734 ± 431 (4298–5368) | 1359 ± 135 (1260–1593) | 570 ± 55 (478–619) | 100% | 0 | 0 |
+| Tarefa 1 - Estruturação de seção de TCC | Gemini padrão (sem prompt de direcionamento) | 5 | 28,04 ± 20,77 (14,67–62,97) | 0 ± 0 (0–0) | 5423 ± 780 (4845–6770) | 1422 ± 176 (1314–1735) | 939 ± 69 (831–1018) | 0% | 0 | 4 |
+| Tarefa 2 - Análise multimodal de PDF | ChaTinho (com prompt de direcionamento) | 5 | 19,18 ± 14,59 (10,10–44,94) | 487 ± 108 (340–644) | 3895 ± 498 (3228–4489) | 1308 ± 137 (1119–1426) | 621 ± 107 (545–697) | 100% | 0 | 0 |
+| Tarefa 2 - Análise multimodal de PDF | Gemini padrão (sem prompt de direcionamento) | 5 | 11,90 ± 5,23 (6,75–18,98) | 0 ± 0 (0–0) | 2496 ± 412 (1851–2850) | 727 ± 104 (554–797) | - | 0% | 0 | 41 |
+| Tarefa 3 - Self-Attention, CoT e 4 referências ABNT | ChaTinho (com prompt de direcionamento) | 5 | 11,96 ± 1,86 (10,44–15,19) | 630 ± 102 (485–747) | 4896 ± 457 (4441–5546) | 1518 ± 142 (1355–1723) | 755 ± 121 (671–894) | 100% | 0 | 0 |
+| Tarefa 3 - Self-Attention, CoT e 4 referências ABNT | Gemini padrão (sem prompt de direcionamento) | 5 | 19,18 ± 16,93 (10,51–49,43) | 0 ± 0 (0–0) | 4249 ± 216 (3961–4543) | 1175 ± 72 (1096–1290) | 1199 ± 188 (1016–1481) | 0% | 0 | 0 |
 
 ## Configuração (idêntica nas duas condições)
 

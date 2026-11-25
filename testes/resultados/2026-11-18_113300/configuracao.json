@@ -84,6 +84,23 @@
     "streamlit": "1.67.0",
     "python-dotenv": "1.2.4"
   },
-  "data_fim": "2026-11-18T15:32:01",
-  "interrompida": "tarefa2_padrao_rep1: sem resposta válida após 40 tentativas"
+  "sessoes": [
+    {
+      "inicio": "2026-11-18T11:33:00",
+      "fim": "2026-11-18T15:32:01",
+      "interrompida": "tarefa2_padrao_rep1: sem resposta válida após 40 tentativas"
+    },
+    {
+      "inicio": "2026-11-24T21:47:26",
+      "fim": "2026-11-24T21:53:45",
+      "interrompida": "cota diária da API esgotada em tarefa2_padrao_rep4"
+    },
+    {
+      "inicio": "2026-11-25T08:35:30",
+      "fim": "2026-11-25T08:40:12",
+      "interrompida": null
+    }
+  ],
+  "data_fim": "2026-11-25T08:40:12",
+  "interrompida": null
 }
