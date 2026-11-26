@@ -29,18 +29,26 @@ for d in [CONVERSAS_DIR, DOWNLOADS_DIR]:
     if not os.path.exists(d):
         os.makedirs(d)
 
+def pasta_conversa(cid):
+    # A pasta é nomeada só pelo identificador; o título fica no dados.json
+    return os.path.join(CONVERSAS_DIR, cid)
+
+def pastas_do_id(cid):
+    # Todas as pastas da conversa: a atual (<id>) e as antigas (<id>_<título>)
+    if not os.path.exists(CONVERSAS_DIR): return []
+    return [p for p in os.listdir(CONVERSAS_DIR) if p == cid or p.startswith(cid + "_")]
+
 def salvar_historico(cid_especifico=None):
-    
+
     cids = [cid_especifico] if cid_especifico else st.session_state["conversas"].keys()
-    
+
     for cid in cids:
         data = st.session_state["conversas"][cid]
-        
-        titulo_limpo = "".join([c if c.isalnum() else "_" for c in data["titulo"]])[:30]
-        pasta_path = os.path.join(CONVERSAS_DIR, f"{cid}_{titulo_limpo}")
+
+        pasta_path = pasta_conversa(cid)
         os.makedirs(pasta_path, exist_ok=True)
-        
-        
+
+
         msgs_para_salvar = []
         for m in data["mensagens"]:
             m_copy = m.copy()
@@ -49,21 +57,53 @@ def salvar_historico(cid_especifico=None):
             msgs_para_salvar.append(m_copy)
             
         with open(os.path.join(pasta_path, "dados.json"), "w", encoding="utf-8") as f:
-            json.dump({**data, "mensagens": msgs_para_salvar}, f, ensure_ascii=False, indent=4)
+            json.dump({**data, "id": cid, "mensagens": msgs_para_salvar}, f, ensure_ascii=False, indent=4)
+
+def ler_dados(pasta):
+    with open(os.path.join(CONVERSAS_DIR, pasta, "dados.json"), "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def migrar_pastas(cid, pastas, data):
+    # Formato antigo: <id>_<título>, com uma pasta a mais a cada troca de título.
+    # Grava o conteúdo escolhido em <id>/dados.json, junta as imagens e apaga as pastas antigas.
+    destino = pasta_conversa(cid)
+    os.makedirs(destino, exist_ok=True)
+    with open(os.path.join(destino, "dados.json"), "w", encoding="utf-8") as f:
+        json.dump({**data, "id": cid}, f, ensure_ascii=False, indent=4)
+    for p in pastas:
+        if p == cid: continue
+        origem_img = os.path.join(CONVERSAS_DIR, p, "Imagens")
+        if os.path.isdir(origem_img):
+            os.makedirs(os.path.join(destino, "Imagens"), exist_ok=True)
+            for img in os.listdir(origem_img):
+                alvo = os.path.join(destino, "Imagens", img)
+                if not os.path.exists(alvo): shutil.copy2(os.path.join(origem_img, img), alvo)
+        shutil.rmtree(os.path.join(CONVERSAS_DIR, p))
 
 def carregar_historico():
     todas_conversas = {}
     if os.path.exists(CONVERSAS_DIR):
+        grupos = {}
         for pasta in os.listdir(CONVERSAS_DIR):
             caminho_dados = os.path.join(CONVERSAS_DIR, pasta, "dados.json")
             if os.path.exists(caminho_dados):
-                try:
-                    with open(caminho_dados, "r", encoding="utf-8") as f:
-                        conversa_data = json.load(f)
-                        
-                        cid = pasta.split("_")[0]
-                        todas_conversas[cid] = conversa_data
-                except: continue
+                grupos.setdefault(pasta.split("_")[0], []).append(pasta)
+        for cid, pastas in grupos.items():
+            candidatos = []
+            for p in pastas:
+                try: candidatos.append((ler_dados(p), p))
+                except Exception: continue
+            if not candidatos: continue
+            # Conteúdo mais recente: as mensagens só são acrescentadas e o título só muda
+            # de "Nova conversa" para o título gerado; então vale a cópia com mais mensagens,
+            # depois a que já tem título, e por fim a de modificação mais recente
+            candidatos.sort(key=lambda c: (len(c[0].get("mensagens", [])),
+                                           c[0].get("titulo") != "Nova conversa",
+                                           os.path.getmtime(os.path.join(CONVERSAS_DIR, c[1], "dados.json"))), reverse=True)
+            conversa_data = candidatos[0][0]
+            if len(pastas) > 1 or pastas[0] != cid:
+                migrar_pastas(cid, pastas, conversa_data)
+            todas_conversas[cid] = {**conversa_data, "id": cid}
     return todas_conversas
 
 #INICIALIZAÇÃO DO ESTADO
@@ -77,6 +117,7 @@ if "tema"               not in st.session_state: st.session_state["tema"]       
 if "arquivos_pendentes" not in st.session_state: st.session_state["arquivos_pendentes"] = []
 if "modo_upload"        not in st.session_state: st.session_state["modo_upload"]        = None
 if "view"               not in st.session_state: st.session_state["view"]               = "chat"
+if "avisos_anexo"       not in st.session_state: st.session_state["avisos_anexo"]       = []
 
 @st.cache_resource
 def get_genai_client(api_key):
@@ -155,22 +196,51 @@ def icone(mime):
     if "pdf" in mime: return "📄"
     return "📎"
 
+def extensao(nome):
+    return os.path.splitext(nome)[1].lower().lstrip(".")
+
+def aviso_formato(nome):
+    ext = extensao(nome)
+    return f"Formato de arquivo não suportado: {'.' + ext if ext else nome}. Envie PDF, imagem ou texto."
+
 def adicionar_arquivo(f):
     if f is None: return
+    if extensao(f.name) not in MIME_MAP:
+        # Extensão não mapeada: recusa antes de entrar na lista de pendentes
+        st.session_state["avisos_anexo"].append(aviso_formato(f.name))
+        return
     st.session_state["arquivos_pendentes"].append({
-        "name": f.name, "mime_type": MIME_MAP.get(f.name.split(".")[-1].lower(), "application/octet-stream"), "data": f.read()
+        "name": f.name, "mime_type": MIME_MAP[extensao(f.name)], "data": f.read()
     })
+
+def remover_nao_suportados():
+    # Garante, antes do envio, que nenhum anexo de extensão não mapeada vá para a API
+    validos, recusados = [], []
+    for a in st.session_state["arquivos_pendentes"]:
+        (validos if extensao(a["name"]) in MIME_MAP else recusados).append(a)
+    st.session_state["arquivos_pendentes"] = validos
+    st.session_state["avisos_anexo"].extend(aviso_formato(a["name"]) for a in recusados)
+    return recusados
+
+# Histórico enviado ao modelo: últimas N mensagens da conversa atual (sem a de boas-vindas)
+HISTORICO_MAX_MENSAGENS = 10
+
+def montar_historico(mensagens):
+    # Só texto (anexos antigos não são reenviados); o prompt de direcionamento
+    # não é repetido aqui porque as mensagens guardadas não o contêm.
+    historico = [types.Content(role="user" if m["role"] == "user" else "model",
+                               parts=[types.Part(text=m["content"])])
+                 for m in mensagens[1:] if m.get("content")]
+    historico = historico[-HISTORICO_MAX_MENSAGENS:]
+    while historico and historico[0].role != "user":
+        historico.pop(0)
+    return historico
 
 def excluir_conversa(cid):
     if cid in st.session_state["conversas"]:
-        # Buscar a pasta física
-        cv = st.session_state["conversas"][cid]
-        titulo_limpo = "".join([c if c.isalnum() else "_" for c in cv["titulo"]])[:30]
-        pasta_path = os.path.join(CONVERSAS_DIR, f"{cid}_{titulo_limpo}")
-        
-        # Remover pasta se existir
-        if os.path.exists(pasta_path):
-            shutil.rmtree(pasta_path)
+        # Remover todas as pastas com esse identificador (atual e antigas)
+        for pasta in pastas_do_id(cid):
+            shutil.rmtree(os.path.join(CONVERSAS_DIR, pasta))
         
         # Remover do estado
         del st.session_state["conversas"][cid]
@@ -333,6 +403,11 @@ for msg in conv["mensagens"]:
         # Exibe o texto da mensagem
         st.markdown(msg["content"])
 
+# Avisos de anexos recusados (exibidos uma vez)
+for aviso in st.session_state["avisos_anexo"]:
+    st.error(aviso)
+st.session_state["avisos_anexo"] = []
+
 # Arquivos pendentes
 if st.session_state["arquivos_pendentes"]:
     for a in st.session_state["arquivos_pendentes"]:
@@ -341,6 +416,10 @@ if st.session_state["arquivos_pendentes"]:
 
 # Input
 prompt = st.chat_input("Digite sua mensagem...")
+
+if prompt and remover_nao_suportados():
+    # Anexo de formato não suportado: não envia; o aviso aparece após o rerun
+    st.rerun()
 
 if prompt:
     # 1. Atualizar o título da conversa se for a primeira mensagem
@@ -381,9 +460,7 @@ if prompt:
                         f.write(img_data)
                     
                     # 2. Salvar na pasta da conversa (Histórico)
-                    titulo_limpo = "".join([c if c.isalnum() else "_" for c in conv["titulo"]])[:30]
-                    pasta_conversa = os.path.join(CONVERSAS_DIR, f"{cid_ativo}_{titulo_limpo}")
-                    pasta_imagens = os.path.join(pasta_conversa, "Imagens")
+                    pasta_imagens = os.path.join(pasta_conversa(cid_ativo), "Imagens")
                     os.makedirs(pasta_imagens, exist_ok=True)
                     
                     filename_cv = os.path.join(pasta_imagens, f"IA_{timestamp}.jpg")
@@ -410,16 +487,20 @@ if prompt:
         with st.chat_message("assistant"):
             # Instrução de sistema e parâmetros vêm de config_modelo.py
             # (os mesmos usados nos testes em testes/executar_testes.py)
+            # O prompt de direcionamento vai só na mensagem atual, como na bateria de testes
             full_prompt = montar_prompt_chatinho(prompt)
-            
+
             parts = [types.Part(inline_data=types.Blob(mime_type=a["mime_type"], data=a["data"])) for a in st.session_state["arquivos_pendentes"]]
             parts.append(types.Part(text=full_prompt))
-            
+
+            # Histórico da conversa (últimas HISTORICO_MAX_MENSAGENS) + mensagem atual
+            contents = montar_historico(conv["mensagens"]) + [types.Content(role="user", parts=parts)]
+
             try:
                 with st.spinner("✨ ChaTinho está processando..."):
                     res = client.models.generate_content(
-                        model=st.session_state["modelo"], 
-                        contents=[types.Content(role="user", parts=parts)],
+                        model=st.session_state["modelo"],
+                        contents=contents,
                         config=criar_config()
                     )
 
@@ -443,8 +524,11 @@ if prompt:
                 salvar_historico(cid_ativo)
                 st.rerun()
             except Exception as e:
-                if "429" in str(e):
-                    st.error("🚀 Limite de mensagens atingido! Aguarde 1 minuto e tente novamente.")
+                erro = str(e)
+                if "429" in erro and ("per day" in erro.lower() or "perday" in erro.lower()):
+                    st.error("🚀 Cota diária da API esgotada. A cota renova no dia seguinte; tente novamente amanhã.")
+                elif "429" in erro:
+                    st.error("🚀 Limite de mensagens por minuto atingido! Aguarde 1 minuto e tente novamente.")
                 elif "API_KEY_INVALID" in str(e):
                     st.error("🔑 Sua chave de API parece inválida. Verifique nas configurações.")
                 else:

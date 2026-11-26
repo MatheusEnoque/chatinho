@@ -95,11 +95,11 @@ Os resultados ficam em `testes/resultados/<data_hora>/`. No plano gratuito da AP
 
 ## Limitações
 
-- **Sem contexto entre mensagens:** cada envio vai ao modelo sem o histórico da conversa, então o modelo não lembra o que foi dito antes.
+- **Contexto limitado:** cada envio leva ao modelo só as últimas 10 mensagens da conversa (`HISTORICO_MAX_MENSAGENS` em `main.py`), apenas o texto; anexos de mensagens anteriores não são reenviados.
 - **"Etapas verificadas" não é verificável:** a seção é texto gerado pelo modelo a pedido da instrução de sistema. Ela não mostra o raciocínio real e não garante que a resposta esteja correta.
 - **Referências bibliográficas:** o modelo pode errar a formatação ABNT ou citar obras inexistentes. Confira sempre as fontes.
-- **Anexos não são persistidos:** os arquivos enviados não são salvos com a conversa. Arquivos .docx não são suportados.
-- **Pastas de conversa duplicadas:** a pasta da conversa é nomeada pelo título, e a mudança de "Nova conversa" para o título gerado cria uma segunda pasta.
+- **Anexos não são persistidos:** os arquivos enviados não são salvos com a conversa. Só são aceitas as extensões de `MIME_MAP` (PDF, imagens, texto, áudio e vídeo); outras, como .docx, são recusadas com aviso.
+- **Conversas salvas pelo identificador:** cada conversa fica em `Conversas/<id>/dados.json`, com o título dentro do arquivo. Pastas do formato antigo (`<id>_<título>`) são migradas na abertura, mantendo o conteúdo mais recente.
 - **Geração de imagem:** depende do serviço externo Pollinations. Nos testes, a imagem veio em 768 × 768 px, embora o app peça 1024 × 1024.
 - **Sem criptografia em repouso:** conversas e imagens ficam em texto e arquivos comuns nas pastas `Conversas/` e `Downloads/`.
 - **Limites da API:** no plano gratuito, as cotas por minuto e por dia geram erros 429.
